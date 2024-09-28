@@ -22,6 +22,10 @@ const errorHandler = (err, req, res, next) => {
     return res.status(STATUS_FORBIDDEN).json({ msg: err.message, status: STATUS_FORBIDDEN });
   }
 
+  if (err.message === "jwt expired") {
+    return res.status(STATUS_FORBIDDEN).json({ msg: err.message, status: STATUS_FORBIDDEN });
+  }
+
   // For other types of errors, default to 500
   res.status(STATUS_INTERNAL_SERVER_ERROR).json({
     msg: "INTERNAL SERVER ERROR",
