@@ -1,7 +1,10 @@
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+const verifyToken = require("./middleware/authorization");
+const injectLoggedFlag = require("./middleware/injectFlag");
 
 require("dotenv").config();
+
 
 // app configs
 const app = express();
@@ -9,43 +12,41 @@ const app = express();
 const USER_SERVICE_URL = "http://localhost:5000";
 const STORE_SERVICE_URL = "http://localhost:5001";
 
+app.use(verifyToken);
 
 app.use(
   "/api/users",
-  (req, res, next) => {
-    console.log(req.url);
-    next();
-  },
+  injectLoggedFlag,
   createProxyMiddleware({
     target: USER_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/users/",
     },
-    on: {
-        proxyReq: (proxyReq, req, res) => {
-            console.log(`Forwarding Request: ${req.originalUrl} to ${proxyReq.path}`);
-        },
-        proxyRes: (proxyReq, req, res) => {
-            console.log(`Forwarding Request: ${req.originalUrl} to ${proxyReq}`);
-        }
-    }
   })
 );
 
 app.use(
   "/api/stores",
+  injectLoggedFlag,
   createProxyMiddleware({
     target: STORE_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/": "/stores/",
     },
-    on: {
-        proxyReq: (proxyReq, req, res) => {
-            console.log(`Forwarding Request: ${req.originalUrl} to ${proxyReq.path}`);
-        }
-    }
+  })
+);
+
+app.use(
+  "/api/products",
+  injectLoggedFlag,
+  createProxyMiddleware({
+    target: STORE_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      "^/": "/products/",
+    },
   })
 );
 
