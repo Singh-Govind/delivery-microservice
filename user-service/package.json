@@ -7,7 +7,7 @@
     "dev": "node --watch index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Govind Kumar Singh",
   "license": "ISC",
   "description": "",
   "dependencies": {
