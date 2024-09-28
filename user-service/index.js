@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
     res.json({msg: "yes its working!"});
