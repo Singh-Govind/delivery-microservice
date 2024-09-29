@@ -50,6 +50,30 @@ app.use(
   })
 );
 
+app.use(
+  "/api/carts",
+  injectLoggedFlag,
+  createProxyMiddleware({
+    target: STORE_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      "^/": "/carts/",
+    },
+  })
+);
+
+app.use(
+  "/api/order",
+  injectLoggedFlag,
+  createProxyMiddleware({
+    target: STORE_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      "^/": "/order/",
+    },
+  })
+);
+
 app.get("/", (req, res) => {
     res.send("welcome to the gateway!")
 })
