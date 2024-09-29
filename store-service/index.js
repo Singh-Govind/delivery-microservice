@@ -6,6 +6,8 @@ const connection = require("./src/config/dbConf");
 
 const routes = require("./src/routes/store-route");
 const productsRoute = require("./src/routes/product-route");
+const cartRoute = require("./src/routes/cart-route");
+const orderRoute = require("./src/routes/order-route");
 
 // other imports
 const errorHandler = require("./src/middleware.js/error-handler");
@@ -21,6 +23,8 @@ app.use(dataExtracter);
 
 app.use("/stores", routes);
 app.use("/products", productsRoute);
+app.use("/carts", cartRoute);
+app.use("/order", orderRoute);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to our store!" });
