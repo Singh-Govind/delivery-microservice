@@ -12,6 +12,8 @@ router.get("/get-products", productController.getProducts);
 
 router.use(authChecker);
 router.post("/add-categories", categoryController.addCategory);
+router.delete("/delete-categories", categoryController.deleteCategory);
 router.post("/add-products", productController.addProducts);
+router.delete("/delete-product", productController.deleteProducts);
 
 module.exports = router;
