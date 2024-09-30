@@ -1,7 +1,7 @@
 const amqp = require('amqplib');
 
 async function sendTask(msg) {
-  const queue = 'create-order';
+  const queue = 'create-delivery';
 
   try {
     const connection = await amqp.connect('amqp://localhost');

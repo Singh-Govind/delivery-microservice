@@ -1,4 +1,5 @@
 const amqp = require("amqplib");
+const { updateOrderStatus } = require("../controller/background-tasks/delivery-fulfillment");
 
 async function receiveTask() {
     const queue = "create-order";
