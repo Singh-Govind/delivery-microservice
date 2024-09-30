@@ -11,6 +11,7 @@ const app = express();
 
 const USER_SERVICE_URL = "http://localhost:5000";
 const STORE_SERVICE_URL = "http://localhost:5001";
+const DELIVERY_SERVICE_URL = "http://localhost:5002";
 
 app.use(verifyToken);
 
@@ -70,6 +71,19 @@ app.use(
     changeOrigin: true,
     pathRewrite: {
       "^/": "/order/",
+    },
+  })
+);
+
+// this will go to delivery service
+app.use(
+  "/api/orders",
+  injectLoggedFlag,
+  createProxyMiddleware({
+    target: DELIVERY_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      "^/": "/orders/",
     },
   })
 );
