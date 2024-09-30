@@ -2,7 +2,7 @@ const amqp = require("amqplib");
 const { updateOrderStatus } = require("../controller/background-tasks/delivery-fulfillment");
 
 async function receiveTask() {
-    const queue = "create-order";
+    const queue = "order-status-update";
 
     try {
         const connection = await amqp.connect("amqp://localhost");
@@ -15,14 +15,13 @@ async function receiveTask() {
         channel.consume(
             queue,
             (msg) => {
-                const task = msg.content.toString();
+                const task = JSON.parse(msg.content.toString());
                 console.log(" [x] Received %s", task);
 
-                // Simulate task processing
-                setTimeout(() => {
-                    console.log(" [x] Done");
-                    channel.ack(msg); // Acknowledge that the message has been processed
-                }, 1000);
+                updateOrderStatus(task);
+                
+                channel.ack(msg);
+                console.log(" [x] Done");
             },
             {
                 noAck: false, // Ensure that messages are acknowledged

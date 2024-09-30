@@ -8,5 +8,6 @@ const router = express.Router();
 
 router.use(authChecker);
 router.get("/create-order", orderController.createOrder);
+router.get("/get-all-orders", orderController.getAllOrders);
 
 module.exports = router;

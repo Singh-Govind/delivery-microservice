@@ -30,7 +30,7 @@ const createOrder = async (req, res, next) => {
 
         cartDetails.forEach((item) => {
             const grossPrice = parseFloat(item.product.discountedPrice) * parseInt(item.quantity);
-            const tax = (((2.5)/100) * grossPrice);
+            const tax = (2.5 / 100) * grossPrice;
             const totalPrice = grossPrice + tax;
 
             const obj = {
@@ -41,8 +41,8 @@ const createOrder = async (req, res, next) => {
                 grossPrice,
                 tax,
                 totalPrice,
-                status: "pending"
-            }
+                status: "pending",
+            };
 
             orderObj.push(obj);
         });
@@ -58,4 +58,32 @@ const createOrder = async (req, res, next) => {
     }
 };
 
-module.exports = { createOrder };
+const getAllOrders = async (req, res, next) => {
+    try {
+        const orderDetails = await Order.aggregate([
+            {
+                $match: { userId: req.user.id },
+            },
+            {
+                $lookup: {
+                    from: "product",
+                    localField: "prodId",
+                    foreignField: "prodId",
+                    as: "product",
+                },
+            },
+            {
+                $unwind: "$product",
+            },
+            {
+                $sort: { createAt: -1 },
+            },
+        ]);
+
+        res.status(STATUS_OK).json({ msg: "orders", orderDetails, status: STATUS_OK });
+    } catch (e) {
+        next(e);
+    }
+};
+
+module.exports = { createOrder, getAllOrders };
