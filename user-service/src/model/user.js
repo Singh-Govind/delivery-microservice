@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     first_name: {type: String},
     last_name: {type: String},
     dob: {type: String},
-    role: {type: String, enum: ["user", "store", "admin"], default: "user"}
+    role: {type: String, enum: ["user", "store", "admin", "delivery-person"], default: "user"}
 });
 
 const User = mongoose.model("user", userSchema, "user");
