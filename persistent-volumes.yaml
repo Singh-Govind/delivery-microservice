@@ -1,0 +1,76 @@
+# pvc-user-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: user-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# pvc-store-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: store-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# pvc-delivery-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: delivery-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# pvc-api-gateway-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: api-gateway-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# pvc-mongo-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# pvc-rabbitmq-data.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
