@@ -1,5 +1,6 @@
 node_modules
 package-lock.json
-diagram.xml
-file-structure
-interaction-flow.md
+diagram.xml.bak
+file-structure.md.bak
+interaction-flow.md.bak
+deployment.yaml.bak
