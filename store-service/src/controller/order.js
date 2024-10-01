@@ -2,7 +2,7 @@ const Cart = require("../model/cart");
 const Order = require("../model/order");
 
 const { STATUS_OK } = require("../constants/status-codes");
-const sendTask = require("../../../delivery-service/src/tasks/sendMsgQueue");
+const sendTask = require("../tasks/sendMsgQueue");
 
 
 // main functions

@@ -7,5 +7,7 @@ const router = express.Router();
 
 router.get("/get-stores", storeController.getStores);
 
+router.use(authChecker);
+router.post("/add-stores", storeController.createStores);
 
 module.exports = router;

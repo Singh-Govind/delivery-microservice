@@ -1,0 +1,78 @@
+services:
+  user-service:
+    image: user-service:latest
+    build: ./user-service
+    ports: 
+      - "5000:5000"
+    volumes:
+      - user_data:/home
+    command: npm start
+    
+  store-service:
+    image: store-service:latest
+    build: ./store-service
+    ports:
+      - "5001:5001"
+    volumes:
+      - store_data:/home
+    command: npm start
+    depends_on:
+      mongodb:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+  
+  delivery-service:
+    image: delivery-service:latest
+    build: ./delivery-service
+    ports:
+      - "5002:5002"
+    volumes:
+      - delivery_data:/home
+    command: npm start
+    depends_on:
+      - store-service
+      - user-service
+    
+  api-gateway:
+    image: api-gateway:latest
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - api_gateway_data:/home
+    command: npm start
+    depends_on:
+      - user-service
+      - store-service
+      - delivery-service
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  delivery_data:
+  rabbitmq_data:
+  api_gateway_data:
+  store_data:
+  user_data:
+  mongo_data: 

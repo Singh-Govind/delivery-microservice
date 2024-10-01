@@ -3,3 +3,4 @@ package-lock.json
 diagram.xml
 file-structure
 interaction-flow.md
+*.yaml
