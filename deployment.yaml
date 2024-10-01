@@ -1,0 +1,214 @@
+# user-service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: <your-username>/user-service:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: "production"       
+            - name: MONGO_URL
+              value: "mongodb://<your-minikube-ip>:30004"  
+            - name: RABBITMQ_URL
+              value: "http://<your-minikube-ip>:30005"
+          volumeMounts:
+            - name: user-data
+              mountPath: /home
+          command: ["npm", "start"]
+      volumes:
+        - name: user-data
+          persistentVolumeClaim:
+            claimName: user-data
+
+---
+# store-service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store-service
+  template:
+    metadata:
+      labels:
+        app: store-service
+    spec:
+      containers:
+        - name: store-service
+          image: <your-username>/store-service:latest
+          ports:
+            - containerPort: 5001
+          env:
+            - name: NODE_ENV
+              value: "production"       
+            - name: MONGO_URL
+              value: "mongodb://<your-minikube-ip>:30004"  
+            - name: RABBITMQ_URL
+              value: "http://<your-minikube-ip>:30005"
+          volumeMounts:
+            - name: store-data
+              mountPath: /home
+          command: ["npm", "start"]
+      volumes:
+        - name: store-data
+          persistentVolumeClaim:
+            claimName: store-data
+
+---
+# delivery-service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-service
+  template:
+    metadata:
+      labels:
+        app: delivery-service
+    spec:
+      containers:
+        - name: delivery-service
+          image: <your-username>/delivery-service:latest
+          ports:
+            - containerPort: 5002
+          env:
+            - name: NODE_ENV
+              value: "production"       
+            - name: MONGO_URL
+              value: "mongodb://<your-minikube-ip>:30004"  
+            - name: RABBITMQ_URL
+              value: "http://<your-minikube-ip>:30005"
+          volumeMounts:
+            - name: delivery-data
+              mountPath: /home
+          command: ["npm", "start"]
+      volumes:
+        - name: delivery-data
+          persistentVolumeClaim:
+            claimName: delivery-data
+
+---
+# api-gateway.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: govindkmr141/api-gateway:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"       
+            - name: USER_SERVICE_URL
+              value: "http://<your-minikube-ip>:30000"  
+            - name: STORE_SERVICE_URL
+              value: "http://<your-minikube-ip>:30001"
+            - name: DELIVERY_SERVICE_URL
+              value: "http://<your-minikube-ip>:30002"
+          volumeMounts:
+            - name: api-gateway-data
+              mountPath: /home
+          command: ["npm", "start"]
+      volumes:
+        - name: api-gateway-data
+          persistentVolumeClaim:
+            claimName: api-gateway-data
+
+---
+# mongodb.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-data
+
+---
+# rabbitmq.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+          livenessProbe:
+            exec:
+              command:
+                - rabbitmqctl
+                - status
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-data
