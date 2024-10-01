@@ -9,9 +9,14 @@ require("dotenv").config();
 // app configs
 const app = express();
 
-const USER_SERVICE_URL = "http://user-service:5000";
-const STORE_SERVICE_URL = "http://store-service:5001";
-const DELIVERY_SERVICE_URL = "http://delivery-service:5002";
+// const USER_SERVICE_URL = "http://user-service:5000";
+// const STORE_SERVICE_URL = "http://store-service:5001";
+// const DELIVERY_SERVICE_URL = "http://delivery-service:5002";
+
+// k8s
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL;
+const STORE_SERVICE_URL = process.env.STORE_SERVICE_URL;
+const DELIVERY_SERVICE_URL = process.env.DELIVERY_SERVICE_URL;
 
 app.use(verifyToken);
 
