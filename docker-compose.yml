@@ -6,6 +6,8 @@ services:
       - "5000:5000"
     volumes:
       - user_data:/home
+    environment:
+      MONGO_URL: "mongodb://mongodb"
     command: npm start
     
   store-service:
@@ -15,6 +17,9 @@ services:
       - "5001:5001"
     volumes:
       - store_data:/home
+    environment:
+      MONGO_URL: "mongodb://mongodb:27017"
+      RABBITMQ_URL: "amqp://rabbitmq:5672"
     command: npm start
     depends_on:
       mongodb:
@@ -29,6 +34,9 @@ services:
       - "5002:5002"
     volumes:
       - delivery_data:/home
+    environment:
+      MONGO_URL: "mongodb://mongodb"
+      RABBITMQ_URL: "amqp://rabbitmq"
     command: npm start
     depends_on:
       - store-service
@@ -41,6 +49,10 @@ services:
       - "3000:3000"
     volumes:
       - api_gateway_data:/home
+    environment: 
+      - USER_SERVICE_URL= http://user-service:5000
+      - STORE_SERVICE_URL= http://store-service:5001
+      - DELIVERY_SERVICE_URL= http://delivery-service:5002
     command: npm start
     depends_on:
       - user-service
