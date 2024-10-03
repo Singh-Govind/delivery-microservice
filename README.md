@@ -53,3 +53,15 @@ To set up the project locally, follow these steps:
    ```
    http://localhost:3000
    ```
+
+## Running with Docker Compose
+   If you don't want to use Kubernetes, you can run all services using Docker Compose with the following command:
+   ```
+   docker-compose up --build
+   ```
+
+   To stop and remove the services, use the following command:
+   ```
+   docker-compose down
+   ```
+
